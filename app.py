@@ -9,21 +9,24 @@ app = Flask(__name__)
 def index():
     error = None
     result = None
+    use_rot13 = request.form.get("rot13") == "on"
 
     if request.method == "POST":
         action = request.form.get("action", "")
 
         if action == "encode":
             text = request.form.get("text", "")
-            rotated = codecs.encode(text, "rot_13")
-            result = base64.b64encode(rotated.encode("utf-8")).decode("ascii")
+            if use_rot13:
+                text = codecs.encode(text, "rot_13")
+            result = base64.b64encode(text.encode("utf-8")).decode("ascii")
 
         elif action == "decode":
             try:
-                decoded = base64.b64decode(
+                result = base64.b64decode(
                     request.form.get("text", ""), validate=True
                 ).decode("utf-8")
-                result = codecs.encode(decoded, "rot_13")
+                if use_rot13:
+                    result = codecs.encode(result, "rot_13")
             except (ValueError, UnicodeDecodeError):
                 error = "Stringa Base64 non valida o contenuto non UTF-8."
 
@@ -32,6 +35,7 @@ def index():
         error=error,
         result=result,
         text=request.form.get("text", ""),
+        use_rot13=use_rot13,
     )
 
 
