@@ -8,22 +8,23 @@
 </head>
 <body><main class="container">
 <header><a class="brand" href="/">DataPilot</a><span>STRUMENTI</span></header>
-<h1>ROT13 + Base64</h1>
-<p class="intro">Uno strumento semplice per codificare e decodificare testo.</p>
+<h1>Codifica e decodifica testo</h1>
+<p class="intro">Usa Base64 da solo oppure scegli di applicare anche ROT13.</p>
 {% if error %}<p class="alert">{{ error }}</p>{% endif %}
 <section class="panel">
-<h2>Codifica e decodifica</h2>
-<p>Codifica: applica ROT13 al testo e poi Base64. Decodifica: esegue le operazioni inverse.</p>
+<h2>Strumento di codifica</h2>
 <form method="post">
 <label for="text">Testo da codificare o stringa Base64 da decodificare</label>
 <textarea id="text" name="text" rows="5" placeholder="Scrivi o incolla qui..." required>{{ text }}</textarea>
+<label class="option"><input type="checkbox" name="rot13" {% if use_rot13 %}checked{% endif %}> Applica anche ROT13</label>
+<p class="muted">Se selezionato, la codifica applica prima ROT13 e poi Base64. La decodifica esegue le operazioni inverse.</p>
 <div class="buttons">
-<button type="submit" name="action" value="encode">ROT13 + Base64</button>
-<button type="submit" name="action" value="decode">Decodifica inversa</button>
+<button type="submit" name="action" value="encode">Codifica</button>
+<button type="submit" name="action" value="decode">Decodifica</button>
 </div>
 </form>
 {% if result is not none %}<label for="result">Risultato</label><textarea id="result" rows="5" readonly>{{ result }}</textarea>{% endif %}
-<p class="muted">Esempio: CIAO → PVCB → UFZDQg==. ROT13 non è una cifratura sicura.</p>
+<p class="muted">Esempio senza ROT13: CIAO → Q0lBTw==. Con ROT13: CIAO → UFZDQg==.</p>
 </section>
 <footer>DataPilot · Demo Flask + Python</footer>
 </main></body></html>
