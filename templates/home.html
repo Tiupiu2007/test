@@ -9,7 +9,7 @@
 <body><main class="container">
 <header><a class="brand" href="/">DataPilot</a><span>STRUMENTI DATI</span></header>
 <h1>Strumenti semplici per i tuoi dati.</h1>
-<p class="intro">Visualizza un CSV e converti testo in Base64 o viceversa.</p>
+<p class="intro">Visualizza un CSV oppure applica ROT13 e Base64 al testo.</p>
 {% if error %}<p class="alert">{{ error }}</p>{% endif %}
 <section class="panel">
 <h2>1. Visualizza un CSV</h2>
@@ -25,13 +25,18 @@
 <tbody>{% for row in rows %}<tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% endif %}
 </section>
 <section class="panel">
-<h2>2. Convertitore Base64</h2>
+<h2>2. ROT13 + Base64</h2>
+<p>Codifica: applica ROT13 al testo e poi Base64. Decodifica: esegue le operazioni inverse.</p>
 <form method="post">
-<label for="text">Testo o stringa Base64</label><textarea id="text" name="text" rows="5" placeholder="Scrivi o incolla qui..." required>{{ text }}</textarea>
-<div class="buttons"><button type="submit" name="action" value="encode">Codifica in Base64</button><button type="submit" name="action" value="decode">Decodifica Base64</button></div>
+<label for="text">Testo da codificare o stringa Base64 da decodificare</label>
+<textarea id="text" name="text" rows="5" placeholder="Scrivi o incolla qui..." required>{{ text }}</textarea>
+<div class="buttons">
+<button type="submit" name="action" value="encode">ROT13 + Base64</button>
+<button type="submit" name="action" value="decode">Decodifica inversa</button>
+</div>
 </form>
 {% if result is not none %}<label for="result">Risultato</label><textarea id="result" rows="5" readonly>{{ result }}</textarea>{% endif %}
-<p class="muted">Base64 è una codifica, non una cifratura.</p>
+<p class="muted">Esempio: CIAO → PVCB → UFZDQg==. ROT13 non è una cifratura sicura.</p>
 </section>
 <footer>DataPilot · Demo Flask + Python</footer>
 </main></body></html>
