@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="it">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Report CSV · DataPilot</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head>
+<body><main class="container"><header><a class="brand" href="/">Data<span>Pilot</span></a><a href="/">← Nuova analisi</a></header>
+<section class="hero"><p class="eyebrow">REPORT DI ANALISI</p><h1>Risultati del <span>controllo.</span></h1><p class="intro">File analizzato: <strong>{{ filename }}</strong></p></section>
+<section class="metrics"><div class="metric"><span>Righe</span><strong>{{ report.row_count }}</strong></div><div class="metric"><span>Colonne</span><strong>{{ report.column_count }}</strong></div><div class="metric"><span>Problemi rilevati</span><strong>{{ report.issue_count }}</strong></div></section>
+<section class="panel"><h2>Controlli di qualità</h2><p>Celle vuote <strong>{{ report.missing_cells|length }}</strong></p><p>Righe duplicate <strong>{{ report.duplicate_rows|length }}</strong></p><p>Valori con spazi superflui <strong>{{ report.whitespace_cells|length }}</strong></p><p>Righe con numero di colonne inatteso <strong>{{ report.malformed_rows|length }}</strong></p><p>Intestazioni duplicate <strong>{{ report.duplicate_headers|length }}</strong></p></section>
+{% if report.missing_cells or report.duplicate_rows or report.whitespace_cells or report.malformed_rows or report.duplicate_headers %}<section class="panel"><h2>Dettaglio problemi</h2>
+{% if report.missing_cells %}<h3>Celle vuote</h3><ul>{% for item in report.missing_cells[:20] %}<li>Riga {{ item.row }}, colonna <b>{{ item.column }}</b></li>{% endfor %}</ul>{% endif %}
+{% if report.duplicate_rows %}<h3>Righe duplicate</h3><p>{{ report.duplicate_rows[:30]|join(', ') }}</p>{% endif %}
+{% if report.whitespace_cells %}<h3>Spazi superflui</h3><ul>{% for item in report.whitespace_cells[:20] %}<li>Riga {{ item.row }}, colonna <b>{{ item.column }}</b></li>{% endfor %}</ul>{% endif %}
+{% if report.malformed_rows %}<h3>Righe con struttura diversa</h3><ul>{% for item in report.malformed_rows[:20] %}<li>Riga {{ item.row }}: attese {{ item.expected }} colonne, trovate {{ item.found }}</li>{% endfor %}</ul>{% endif %}
+{% if report.duplicate_headers %}<h3>Intestazioni duplicate</h3><p>{{ report.duplicate_headers|join(', ') }}</p>{% endif %}</section>{% else %}<p class="success">Nessun problema rilevato dai controlli disponibili. Questo non garantisce la correttezza semantica dei dati.</p>{% endif %}
+{% if report.preview %}<section class="panel"><h2>Anteprima (prime 8 righe)</h2><div class="table-wrap"><table><thead><tr>{% for header in report.headers %}<th>{{ header or 'Colonna senza nome' }}</th>{% endfor %}</tr></thead><tbody>{% for row in report.preview %}<tr>{% for header in report.headers %}<td>{{ row[header or ('Colonna ' ~ loop.index)] }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></section>{% endif %}
+<footer>DataPilot · Demo personale Flask + Python</footer></main></body></html>
