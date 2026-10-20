@@ -1,4 +1,5 @@
 import base64
+import codecs
 import csv
 import io
 from flask import Flask, render_template, request
@@ -20,8 +21,11 @@ def index():
                 error = "Seleziona un file CSV."
             else:
                 try:
+                    delimiter = request.form.get("delimiter", ",")
+                    if delimiter not in [",", ";", "\t", "|"]:
+                        delimiter = ","
                     data = list(csv.reader(io.StringIO(uploaded.read().decode("utf-8-sig")),
-                                           delimiter=request.form.get("delimiter", ",")))
+                                           delimiter=delimiter))
                     if data:
                         headers, rows = data[0], data[1:101]
                     else:
@@ -29,12 +33,15 @@ def index():
                 except (UnicodeDecodeError, csv.Error):
                     error = "File CSV non valido."
         elif action == "encode":
-            result = base64.b64encode(request.form.get("text", "").encode()).decode()
+            text = request.form.get("text", "")
+            rotated = codecs.encode(text, "rot_13")
+            result = base64.b64encode(rotated.encode("utf-8")).decode("ascii")
         elif action == "decode":
             try:
-                result = base64.b64decode(request.form.get("text", ""), validate=True).decode()
+                decoded = base64.b64decode(request.form.get("text", ""), validate=True).decode("utf-8")
+                result = codecs.encode(decoded, "rot_13")
             except (ValueError, UnicodeDecodeError):
-                error = "Stringa Base64 non valida."
+                error = "Stringa Base64 non valida o contenuto non UTF-8."
     return render_template("home.html", error=error, result=result, headers=headers,
                            rows=rows, text=request.form.get("text", ""))
 
