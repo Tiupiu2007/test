@@ -7,25 +7,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body><main class="container">
-<header><a class="brand" href="/">DataPilot</a><span>STRUMENTI DATI</span></header>
-<h1>Strumenti semplici per i tuoi dati.</h1>
-<p class="intro">Visualizza un CSV oppure applica ROT13 e Base64 al testo.</p>
+<header><a class="brand" href="/">DataPilot</a><span>STRUMENTI</span></header>
+<h1>ROT13 + Base64</h1>
+<p class="intro">Uno strumento semplice per codificare e decodificare testo.</p>
 {% if error %}<p class="alert">{{ error }}</p>{% endif %}
 <section class="panel">
-<h2>1. Visualizza un CSV</h2>
-<form method="post" enctype="multipart/form-data">
-<input type="hidden" name="action" value="csv">
-<label for="file">File CSV</label><input id="file" name="file" type="file" accept=".csv,text/csv" required>
-<label for="delimiter">Separatore</label>
-<select id="delimiter" name="delimiter"><option value=",">Virgola (,)</option><option value=";">Punto e virgola (;)</option><option value="|">Pipe (|)</option><option value="&#9;">Tabulazione</option></select>
-<button type="submit">Visualizza CSV</button>
-</form>
-{% if headers %}<h3>Anteprima (massimo 100 righe)</h3>
-<div class="table-wrap"><table><thead><tr>{% for header in headers %}<th>{{ header }}</th>{% endfor %}</tr></thead>
-<tbody>{% for row in rows %}<tr>{% for cell in row %}<td>{{ cell }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>{% endif %}
-</section>
-<section class="panel">
-<h2>2. ROT13 + Base64</h2>
+<h2>Codifica e decodifica</h2>
 <p>Codifica: applica ROT13 al testo e poi Base64. Decodifica: esegue le operazioni inverse.</p>
 <form method="post">
 <label for="text">Testo da codificare o stringa Base64 da decodificare</label>
